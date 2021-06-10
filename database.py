@@ -48,9 +48,12 @@ class NEODatabase:
         # is a dict with time, distance,and velocity
         self.NeoApproach = {}
         for neo in self._neos:
-            self.NeoApproach[neo.designation] = {'pdes':neo.designation, 'name':neo.name, 'diameter':neo.diameter,'hazardous':neo.hazardous, 'approaches':[]}
+            self.NeoApproach[neo.designation] = NearEarthObject(neo.designation, neo.name, neo.diameter, neo.hazardous)
+
         for approach in self._approaches:
-               self.NeoApproach[approach._designation]['approaches'].append({'pdes':approach._designation, 'time':approach.time,'distance':approach.distance, 'velocity':approach.velocity})
+            neo = self.get_neo_by_designation(approach._designation)
+            neo.approaches.append(approach)
+            approach.neo = neo
         return None
 
     def get_neo_by_designation(self, designation):
@@ -69,22 +72,7 @@ class NEODatabase:
         # TODO: Fetch an NEO by its primary designation
 
         if designation in self.NeoApproach.keys():
-            pdes = self.NeoApproach[designation]['pdes']
-            name= self.NeoApproach[designation]['name']
-            diameter = self.NeoApproach[designation]['diameter']
-            hazardous = self.NeoApproach[designation]['hazardous']
-            approaches = self.NeoApproach[designation]['approaches']
-            ####
-            ca=[]
-            for app in approaches:
-                time = app['time']
-                distance = app['distance']
-                velocity = app['velocity']
-                ca_obj = CloseApproach(pdes, time, distance, velocity, name)
-                ca.append(ca_obj)
-                ####
-            neo_obj = NearEarthObject(pdes, name, diameter, hazardous, ca)
-            return neo_obj
+            return self.NeoApproach[designation]
         else:
             return None
 
@@ -107,25 +95,10 @@ class NEODatabase:
         name = name
 
         for key, value in self.NeoApproach.items():
-            if value['name'] == None or value['name']=='':
+            if value.name == None or value.name=='':
                 continue
-            if name.lower() == value['name'].lower():
-                pdes = self.NeoApproach[key]['pdes']
-                name= self.NeoApproach[key]['name']
-                diameter = self.NeoApproach[key]['diameter']
-                hazardous = self.NeoApproach[key]['hazardous']
-                approaches = self.NeoApproach[key]['approaches']
-                ####
-                ca=[]
-                for app in approaches:
-                    time = app['time']
-                    distance = app['distance']
-                    velocity = app['velocity']
-                    ca_obj = CloseApproach(pdes, time, distance, velocity, name)
-                    ca.append(ca_obj)
-                ####
-                neo_obj = NearEarthObject(pdes, name, diameter, hazardous, ca)
-                return neo_obj
+            if name.lower() == value.name.lower():
+                return value
         return None
 
     def query(self, filters=()):
