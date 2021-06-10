@@ -30,12 +30,13 @@ def load_neos(neo_csv_path='data/neos.csv'):
         reader = csv.reader(f)
         next(reader)
         for row in reader:
-            if row[7] == 'Y':
-                H = True
-            else:
-                H = False
-            neo_obj = NearEarthObject(row[3], row[4], row[15], H)
-            neos.append(neo_obj)
+            if row[3] != None or row[3] !='':
+                if row[7] == 'Y':
+                    H = True
+                else:
+                    H = False
+                neo_obj = NearEarthObject(row[3], row[4], row[15], H)
+                neos.append(neo_obj)
     return neos
 
 def load_approaches(cad_json_path='data/cad.json'):
@@ -51,6 +52,7 @@ def load_approaches(cad_json_path='data/cad.json'):
 
     approaches = []
     for item in contents:
-        app_obj = CloseApproach(item[0], item[3],  item[4], item[7])
-        approaches.append(app_obj)
+        if item[0] != None or item[0] != '':
+            app_obj = CloseApproach(item[0], item[3],  item[4], item[7])
+            approaches.append(app_obj)
     return approaches

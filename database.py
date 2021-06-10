@@ -52,8 +52,11 @@ class NEODatabase:
 
         for approach in self._approaches:
             neo = self.get_neo_by_designation(approach._designation)
-            neo.approaches.append(approach)
-            approach.neo = neo
+            if neo != None:
+                approach.name = neo.name
+                neo.approaches.append(approach)
+                approach.neo = neo.designation
+
         return None
 
     def get_neo_by_designation(self, designation):
@@ -93,7 +96,6 @@ class NEODatabase:
 
         # TODO: Fetch an NEO by its name.
         name = name
-
         for key, value in self.NeoApproach.items():
             if value.name == None or value.name=='':
                 continue
