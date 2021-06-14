@@ -25,18 +25,18 @@ def load_neos(neo_csv_path='data/neos.csv'):
     :return: A collection of `NearEarthObject`s.
     """
     # TODO: Load NEO data from the given CSV file.
-    neos = []  #create neo list of lists
+    neos = []  #create list of neo objects
     with open(neo_csv_path) as f:
         reader = csv.reader(f)
         next(reader)
-        for row in reader:
+        for row in reader:  #parse row of csv into pdes(designation),name,diameter, and hazardous
             if row[3] != None or row[3] !='':
                 if row[7] == 'Y':
                     H = True
                 else:
                     H = False
-                neo_obj = NearEarthObject(row[3], row[4], row[15], H)
-                neos.append(neo_obj)
+                neo_obj = NearEarthObject(row[3], row[4], row[15], H)  #create Neo obj with designation,name,diameter, and hazardous
+                neos.append(neo_obj)      #append obj to the list
     return neos
 
 def load_approaches(cad_json_path='data/cad.json'):
@@ -48,11 +48,11 @@ def load_approaches(cad_json_path='data/cad.json'):
     # TODO: Load close approach data from the given JSON file.
     with open(cad_json_path, 'r') as f:
         contents = json.load(f)  # Parse JSON data into a Python object.
-    contents = contents['data']
+    contents = contents['data']   #just grab the data part
 
-    approaches = []
+    approaches = []    #create list of approach objects
     for item in contents:
         if item[0] != None or item[0] != '':
-            app_obj = CloseApproach(item[0], item[3],  item[4], item[7])
-            approaches.append(app_obj)
+            app_obj = CloseApproach(item[0], item[3],  item[4], item[7])  #create approach obj designation,name, distance, velocity
+            approaches.append(app_obj)     #append approach obj to list
     return approaches
