@@ -1,4 +1,5 @@
-"""A database encapsulating collections of near-Earth objects and their close approaches.
+"""A database encapsulating collections of near-Earth objects and their close
+ approaches.
 
 A `NEODatabase` holds an interconnected data set of NEOs and close approaches.
 It provides methods to fetch an NEO by primary designation or by name, as well
@@ -19,64 +20,68 @@ class NEODatabase:
     help fetch NEOs by primary designation or by name and to help speed up
     querying for close approaches that match criteria.
     """
+
     def __init__(self, neos, approaches):
         """Create a new `NEODatabase`.
 
-        As a precondition, this constructor assumes that the collections of NEOs
-        and close approaches haven't yet been linked - that is, the
+        As a precondition, this constructor assumes that the collections of
+        NEOs and close approaches haven't yet been linked - that is, the
         `.approaches` attribute of each `NearEarthObject` resolves to an empty
         collection, and the `.neo` attribute of each `CloseApproach` is None.
 
         However, each `CloseApproach` has an attribute (`._designation`) that
         matches the `.designation` attribute of the corresponding NEO. This
-        constructor modifies the supplied NEOs and close approaches to link them
-        together - after it's done, the `.approaches` attribute of each NEO has
-        a collection of that NEO's close approaches, and the `.neo` attribute of
-        each close approach references the appropriate NEO.
+        constructor modifies the supplied NEOs and close approaches to link
+        them together - after it's done, the `.approaches` attribute of each
+        NEO has a collection of that NEO's close approaches, and the `.neo`
+        attribute of each close approach references the appropriate NEO.
 
         :param neos: A collection of `NearEarthObject`s.
         :param approaches: A collection of `CloseApproach`es.
         """
         self._neos = neos   #the extracted list of Neo objects
-        self._approaches = approaches    #the extracted list of Approach objects
-
-        self.NeoApproach_by_pdes = {}   #dictionary of NEOS objects, with key being pdes designation of neo
-        self.NeoApproach_by_name = {}  #dictionary of NEOs objects, with key being name of neo
+        # the extracted list of Approach objects
+        self._approaches = approaches
+        # dictionary of NEOs objects, with key designation PDES of neo
+        self.NeoApproach_by_pdes = {}
+        # dictionary of NEOs objects, with key being name of neo
+        self.NeoApproach_by_name = {}
         for neo in self._neos:
-
-            #building dictionaries one neo at a time.  i.e. each neo is mapped to each dictionary
+            # building dictionaries one neo at a time.
+            # i.e. each neo is mapped to each dictionary
             self.NeoApproach_by_pdes[neo.designation] = neo
             self.NeoApproach_by_name[neo.name] = neo
         for approach in self._approaches:
-            #add the approaches to each neo object in the dictionary
+            # add the approaches to each neo object in the dictionary
             neo = self.NeoApproach_by_pdes[approach._designation]
-
-            if neo != None:
+            if neo is not None:
                 approach.name = neo.name
                 approach.designation = neo.designation
                 neo.approaches.append(approach)
                 approach.neo = neo
-
         return None
+
 
     def get_neo_by_designation(self, designation):
         """Find and return an NEO by its primary designation.
 
         If no match is found, return `None` instead.
 
-        Each NEO in the data set has a unique primary designation, as a string.
+        Each NEO in the data set has a unique primary designation, as a
+        string.
 
         The matching is exact - check for spelling and capitalization if no
         match is found.
 
         :param designation: The primary designation of the NEO to search for.
-        :return: The `NearEarthObject` with the desired primary designation, or `None`.
+        :return: The `NearEarthObject` with the desired primary designation,
+        or `None`.
         """
-
         if designation in self.NeoApproach_by_pdes.keys():
             return self.NeoApproach_by_pdes[designation]
         else:
             return None
+
 
     def get_neo_by_name(self, name):
         """Find and return an NEO by its name.
@@ -92,37 +97,38 @@ class NEODatabase:
         :param name: The name, as a string, of the NEO to search for.
         :return: The `NearEarthObject` with the desired name, or `None`.
         """
-
         name = name
         if name in self.NeoApproach_by_name.keys():
             return self.NeoApproach_by_name[name]
         else:
             return None
 
-    def query(self, filters=[]):
-        """Query close approaches to generate those that match a collection of filters.
 
-        This generates a stream of `CloseApproach` objects that match all of the
-        provided filters.
+    def query(self, filters=[]):
+        """Query close approaches to generate those that match a collection
+         of filters.
+
+        This generates a stream of `CloseApproach` objects that match all
+        of the provided filters.
 
         If no arguments are provided, generate all known close approaches.
 
-        The `CloseApproach` objects are generated in internal order, which isn't
-        guaranteed to be sorted meaninfully, although is often sorted by time.
+        The `CloseApproach` objects are generated in internal order,
+        which isn't guaranteed to be sorted meaninfully, although is often
+        sorted by time.
 
-        :param filters: A collection of filters capturing user-specified criteria.
+        :param filters: A collection of filters capturing user-specified
+         criteria.
         :return: A stream of matching `CloseApproach` objects.
         """
-        
-        if filters==[] or filters==None:
-                yield approach
+        if filters == [] or filters is None:
+            yield approach
         else:
             for approach in self._approaches:
                 flag = True
                 for flt in filters:
-                    if flt(approach)is not True:
+                    if flt(approach) is not True:
                         flag = False
                         break
-
                 if flag is True:
                     yield approach
