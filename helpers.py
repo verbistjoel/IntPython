@@ -26,10 +26,8 @@ def cd_to_datetime(calendar_date):
     :param calendar_date: A calendar date in YYYY-bb-DD hh:mm format.
     :return: A naive `datetime` corresponding to the given calendar date and time.
     """
-    try:
-        date_time = datetime.datetime.strptime(calendar_date, "%Y-%b-%d %H:%M")
-    except ValueError:
-        date_time = datetime.datetime.strptime(calendar_date, "%Y-%m-%d %H:%M:%S")
+    date_time = datetime.datetime.strptime(calendar_date, "%Y-%b-%d %H:%M")
+
     return date_time
 
 
