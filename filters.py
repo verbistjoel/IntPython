@@ -1,5 +1,4 @@
-"""Provide filters for querying close approaches and limit the generated
- results.
+"""Provide filters for querying close approaches and limit.
 
 The `create_filters` function produces a collection of objects that is used
 by the `query` method to generate a stream of `CloseApproach` objects that
@@ -19,6 +18,7 @@ an iterator.
 
 import operator
 from itertools import islice
+
 
 class UnsupportedCriterionError(NotImplementedError):
     """A filter criterion is unsupported."""
@@ -41,8 +41,7 @@ class AttributeFilter:
     """
 
     def __init__(self, op, value):
-        """Construct a new `AttributeFilter` from an binary predicate
-         and a reference value.
+        """Construct a new `AttributeFilter`.
 
         The reference value will be supplied as the second (right-hand side)
         argument to the operator function. For example, an `AttributeFilter`
@@ -55,11 +54,9 @@ class AttributeFilter:
         self.op = op
         self.value = value
 
-
     def __call__(self, approach):
         """Invoke `self(approach)`."""
         return self.op(self.get(approach), self.value)
-
 
     @classmethod
     def get(cls, approach):
@@ -74,44 +71,43 @@ class AttributeFilter:
         """
         raise UnsupportedCriterionError
 
-
     def __repr__(self):
-        '''computer readable print version.'''
+        """Computer readable print version."""
         return f"{self.__class__.__name__}(op=operator.{self.op.__name__}, \
         value={self.value})"
 
 
 # building filter classes utilizing the AttributeFilter superclass
 class DiameterFilter(AttributeFilter):
-    '''diameter filter class'''
+    """Diameter filter class."""
     @classmethod
     def get(cls, approach):
         return approach.neo.diameter
 
 
 class HazardousFilter(AttributeFilter):
-    '''hazardous filter class'''
+    """Hazardous filter class."""
     @classmethod
     def get(cls, approach):
         return approach.neo.hazardous
 
 
 class DistanceFilter(AttributeFilter):
-    '''distance filter class'''
+    """Distance filter class."""
     @classmethod
     def get(cls, approach):
         return approach.distance
 
 
 class VelocityFilter(AttributeFilter):
-    '''velocity filter class'''
+    """Velocity filter class."""
     @classmethod
     def get(cls, approach):
         return approach.velocity
 
 
 class DateFilter(AttributeFilter):
-    '''date filter class'''
+    """Date filter class."""
     @classmethod
     def get(cls, approach):
         return approach.time.date()
@@ -163,43 +159,43 @@ def create_filters(date=None, start_date=None, end_date=None,
     :return: A collection of filters for use with `query`.
     """
     filters = []
-    if date != None:
+    if date is not None:
         flt = DateFilter(operator.eq, date)
         filters.append(flt)
 
-    if start_date != None:
+    if start_date is not None:
         flt = DateFilter(operator.ge, start_date)
         filters.append(flt)
-    if end_date != None:
+    if end_date is not None:
         flt = DateFilter(operator.le, end_date)
         filters.append(flt)
 
-    if hazardous == None:
+    if hazardous is None:
         flt = HazardousFilter(operator.eq, False)
         filters.append(flt)
     else:
-        flt = HazardousFilter(operator.eq,bool(hazardous))
+        flt = HazardousFilter(operator.eq, bool(hazardous))
         filters.append(flt)
 
-    if distance_min != None:
-        flt = DistanceFilter(operator.ge,float(distance_min))
+    if distance_min is not None:
+        flt = DistanceFilter(operator.ge, float(distance_min))
         filters.append(flt)
-    if distance_max != None:
-        flt = DistanceFilter(operator.le,float(distance_max))
-        filters.append(flt)
-
-    if diameter_min != None:
-        flt = DiameterFilter(operator.ge,float(diameter_min))
-        filters.append(flt)
-    if diameter_max != None:
-        flt = DiameterFilter(operator.le,float(diameter_max))
+    if distance_max is not None:
+        flt = DistanceFilter(operator.le, float(distance_max))
         filters.append(flt)
 
-    if velocity_min != None:
-        flt = VelocityFilter(operator.ge,float(velocity_min))
+    if diameter_min is not None:
+        flt = DiameterFilter(operator.ge, float(diameter_min))
         filters.append(flt)
-    if velocity_max != None:
-        flt = VelocityFilter(operator.le,float(velocity_max))
+    if diameter_max is not None:
+        flt = DiameterFilter(operator.le, float(diameter_max))
+        filters.append(flt)
+
+    if velocity_min is not None:
+        flt = VelocityFilter(operator.ge, float(velocity_min))
+        filters.append(flt)
+    if velocity_max is not None:
+        flt = VelocityFilter(operator.le, float(velocity_max))
         filters.append(flt)
 
     return filters
@@ -214,7 +210,7 @@ def limit(iterator, n=None):
     :param n: The maximum number of values to produce.
     :yield: The first (at most) `n` values from the iterator.
     """
-    if n==0 or n==None:
+    if n==0 or n is None:
         return iterator
     else:
         it=[]

@@ -33,7 +33,7 @@ class NearEarthObject:
     """
 
     def __init__(self, designation, name=None, diameter=float('nan'),
-                hazardous=False, approaches=[]):
+                    hazardous=False, approaches=[]):
         """Create a new `NearEarthObject`.
 
         :param info: A dictionary of excess keyword arguments supplied to
@@ -56,7 +56,6 @@ class NearEarthObject:
         # Creates an empty initial collection of linked approaches.
         self.approaches = []
 
-
     @property
     def fullname(self):
         """Return a representation of the full name of this NEO."""
@@ -66,20 +65,17 @@ class NearEarthObject:
             fullname = self.designation
         return fullname
 
-
     def __str__(self):
         """Return `str(self)`."""
-        if self.hazardous:     #True = 'is',  False = 'is not'
+        if self.hazardous:     # True = 'is',  False = 'is not'
             haz = 'is'
         else:
             haz = 'is not'
         return f"A NearEarthObject '{self.fullname}' has a diameter of \
         {self.diameter:.3f} km and {haz} hazardous."
 
-
     def __repr__(self):
-        """Return `repr(self)`, a computer-readable string representation
-         of this object."""
+        """Return `repr(self)`, a computer-readable string."""
         return (f"NearEarthObject(designation={self.designation!r}, \
         name={self.name!r}, "
                 f"diameter={self.diameter:.3f}, \
@@ -101,7 +97,7 @@ class CloseApproach:
     """
 
     def __init__(self, designation, time=None, distance=0.0, velocity=0.0,
-                name=None):
+                    name=None):
         """Create a new `CloseApproach`.
 
         :param info: A dictionary of excess keyword arguments supplied to
@@ -131,8 +127,7 @@ class CloseApproach:
 
     @property
     def time_str(self):
-        """Return a formatted representation of this `CloseApproach`'s
-        approach time.
+        """Return a formatted representation of this approach time.
 
         The value in `self.time` should be a Python `datetime` object. While
         a `datetime` object has a string representation, the default
@@ -162,8 +157,7 @@ class CloseApproach:
         {self.velocity:.2f} km/s."
 
     def __repr__(self):
-        """Return `repr(self)`, a computer-readable string representation
-         of this object."""
+        """Return `repr(self)`, a computer-readable string."""
         return (f"CloseApproach(_designation={self._designation!r}, \
         time={self.time_str!r}, distance={self.distance:.2f}, "
                 f"velocity={self.velocity:.2f}, neo={self.neo!r})")

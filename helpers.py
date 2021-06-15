@@ -16,8 +16,7 @@ import datetime
 
 
 def cd_to_datetime(calendar_date):
-    """Convert a NASA-formatted calendar date/time description into a
-    datetime.
+    """Convert a NASA-format cldar date/time into a datetime.
 
     NASA's format, at least in the `cd` field of close approach data, uses
     the English locale's month names. For example, December 31st, 2020 at

@@ -27,14 +27,15 @@ def write_to_csv(results, filename):
     be saved.
     """
     fieldnames = ('datetime_utc', 'distance_au', 'velocity_km_s',
-            'designation', 'name', 'diameter_km', 'potentially_hazardous')
+                    'designation', 'name', 'diameter_km',
+                     'potentially_hazardous')
 
     with open(filename, 'w') as outfile:
         writer = csv.writer(outfile)
         writer.writerow(fieldnames)
         for row in results:
             r = [row.time, row.distance, row.velocity, row.neo.designation,
-                row.neo.name, row.neo.diameter, row.neo.hazardous]
+                    row.neo.name, row.neo.diameter, row.neo.hazardous]
             writer.writerow(r)
 
 
@@ -54,11 +55,11 @@ def write_to_json(results, filename):
     for row in results:
         print(row.neo)
         r = {'datetime_utc': datetime_to_str(row.time),
-            'distance_au': row.distance, 'velocity_km_s': row.velocity,
-             'designation': row._designation,
-             'neo':{'designation': row.neo.designation,
-             'name': row.neo.name, 'diameter_km': row.neo.diameter,
-             'potentially_hazardous': row.neo.hazardous}}
+                'distance_au': row.distance, 'velocity_km_s': row.velocity,
+                'designation': row._designation,
+                'neo': {'designation': row.neo.designation,
+                'name': row.neo.name, 'diameter_km': row.neo.diameter,
+                'potentially_hazardous': row.neo.hazardous}}
         dicts.append(r)
 
     with open(filename, 'w') as json_file:
