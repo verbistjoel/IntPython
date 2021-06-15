@@ -13,9 +13,8 @@ the supplied `CloseApproach`.
 
 The `limit` function simply limits the maximum number of values produced by an
 iterator.
-
-You'll edit this file in Tasks 3a and 3c.
 """
+
 import operator
 from itertools import islice
 
@@ -71,6 +70,7 @@ class AttributeFilter:
     def __repr__(self):
         return f"{self.__class__.__name__}(op=operator.{self.op.__name__}, value={self.value})"
 
+#building filter classes utilizing the AttributeFilter superclass
 class DiameterFilter(AttributeFilter):
         @classmethod
         def get(cls, approach):
@@ -131,7 +131,7 @@ def create_filters(date=None, start_date=None, end_date=None,
     :param hazardous: Whether the NEO of a matching `CloseApproach` is potentially hazardous.
     :return: A collection of filters for use with `query`.
     """
-    # TODO: Decide how you will represent your filters.
+
     filters = []
 
     if date != None:
@@ -185,11 +185,11 @@ def limit(iterator, n=None):
     :param n: The maximum number of values to produce.
     :yield: The first (at most) `n` values from the iterator.
     """
-    # TODO: Produce at most `n` values from the given iterator.
+
     if n==0 or n==None:
         return iterator
     else:
         it=[]
-        for i in islice(iterator, 0, n):
+        for i in islice(iterator, 0, n):   #first n values
             it.append(i)
     return it

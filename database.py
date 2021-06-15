@@ -8,8 +8,6 @@ user-specified criteria.
 Under normal circumstances, the main module creates one NEODatabase from the
 data on NEOs and close approaches extracted by `extract.load_neos` and
 `extract.load_approaches`.
-
-You'll edit this file in Tasks 2 and 3.
 """
 
 
@@ -42,23 +40,23 @@ class NEODatabase:
         self._neos = neos   #the extracted list of Neo objects
         self._approaches = approaches    #the extracted list of Approach objects
 
-        # TODO: What additional auxiliary data structures will be useful?
-        # TODO: Link together the NEOs and their close approaches
-
         self.NeoApproach_by_pdes = {}   #dictionary of NEOS objects, with key being pdes designation of neo
         self.NeoApproach_by_name = {}  #dictionary of NEOs objects, with key being name of neo
         for neo in self._neos:
+
             #building dictionaries one neo at a time.  i.e. each neo is mapped to each dictionary
             self.NeoApproach_by_pdes[neo.designation] = neo
             self.NeoApproach_by_name[neo.name] = neo
         for approach in self._approaches:
             #add the approaches to each neo object in the dictionary
-            neo = self.get_neo_by_designation(approach._designation)
+            neo = self.NeoApproach_by_pdes[approach._designation]
+
             if neo != None:
                 approach.name = neo.name
                 approach.designation = neo.designation
                 neo.approaches.append(approach)
                 approach.neo = neo
+
         return None
 
     def get_neo_by_designation(self, designation):
@@ -74,7 +72,6 @@ class NEODatabase:
         :param designation: The primary designation of the NEO to search for.
         :return: The `NearEarthObject` with the desired primary designation, or `None`.
         """
-        # TODO: Fetch an NEO by its primary designation
 
         if designation in self.NeoApproach_by_pdes.keys():
             return self.NeoApproach_by_pdes[designation]
@@ -96,7 +93,6 @@ class NEODatabase:
         :return: The `NearEarthObject` with the desired name, or `None`.
         """
 
-        # TODO: Fetch an NEO by its name.
         name = name
         if name in self.NeoApproach_by_name.keys():
             return self.NeoApproach_by_name[name]
@@ -117,16 +113,16 @@ class NEODatabase:
         :param filters: A collection of filters capturing user-specified criteria.
         :return: A stream of matching `CloseApproach` objects.
         """
-        # TODO: Generate `CloseApproach` objects that match all of the filters.
-
-        for approach in self._approaches:
-            if filters==[] or filters==None:
+        
+        if filters==[] or filters==None:
                 yield approach
-            else:
+        else:
+            for approach in self._approaches:
                 flag = True
-                for filt in filters:
-                    if filt(approach)== False:
+                for flt in filters:
+                    if flt(approach)is not True:
                         flag = False
                         break
-                if flag == True:
+
+                if flag is True:
                     yield approach
