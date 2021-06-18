@@ -170,10 +170,7 @@ def create_filters(date=None, start_date=None, end_date=None,
         flt = DateFilter(operator.le, end_date)
         filters.append(flt)
 
-    if hazardous is None:
-        flt = HazardousFilter(operator.eq, False)
-        filters.append(flt)
-    else:
+    if hazardous is not None:
         flt = HazardousFilter(operator.eq, bool(hazardous))
         filters.append(flt)
 

@@ -116,14 +116,11 @@ class NEODatabase:
          criteria.
         :return: A stream of matching `CloseApproach` objects.
         """
-        if filters == [] or filters is None:
-            yield approach
-        else:
-            for approach in self._approaches:
-                flag = True
-                for flt in filters:
-                    if flt(approach) is not True:
-                        flag = False
-                        break
-                if flag is True:
-                    yield approach
+        for approach in self._approaches:
+            flag = True
+            for flt in filters:
+                if flt(approach) is not True:
+                    flag = False
+                    break
+            if flag is True:
+                yield approach
